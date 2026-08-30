@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TMFX_SIGNAL</title>
+<meta name="theme-color" content="#07111f">
+<style>
+:root{--bg:#050c16;--card:#0b1727;--card2:#0e1d30;--line:#203650;--text:#edf5ff;--muted:#91a5ba;--gold:#f5b84b;--cyan:#27d3e6;--pink:#ff5e9a;--green:#65e6a0;--red:#ff747d;--amber:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#0b1a2d 0,#050c16 48%,#030810 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:14px}.wrap{width:min(1100px,100%);margin:auto;padding:16px}.hidden{display:none!important}.muted{color:var(--muted)}
+.card{background:linear-gradient(180deg,rgba(15,30,48,.96),rgba(8,18,31,.96));border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 14px 45px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand h1{margin:0;font-size:22px;letter-spacing:1px}.brand small{color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.dot{width:7px;height:7px;border-radius:50%;background:var(--amber)}.dot.live{background:var(--green)}
+.signal-card{text-align:center;padding:22px}.signal{font-size:25px;font-weight:900;letter-spacing:.3px;margin:5px 0 10px}.signal.buy{color:var(--green)}.signal.sell{color:var(--red)}.signal.wait{color:var(--amber)}.signal.sub{font-size:18px;color:var(--muted)}
+.signal-note{max-width:760px;margin:0 auto;color:#b9c8d8;line-height:1.55}.opps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}.opp{padding:10px;border:1px solid var(--line);border-radius:12px;background:#07111e;color:var(--muted);font-size:11px}.opp.active{border-color:#50749a;color:var(--text);background:#0d2034}.opp strong{display:block;font-size:13px;margin-bottom:3px}
+.statusbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.selected{font-size:20px;font-weight:800}.selected span{color:var(--gold)}
+.zone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.zone{border:1px solid #20354d;border-radius:13px;padding:10px;background:#07111e;position:relative;overflow:hidden}.zone.active{border-color:#5a7593;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}.zone-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.zone-name{font-weight:800}.zone-range{font-size:10px;color:var(--muted)}.rf{display:grid;grid-template-columns:1fr 1fr;gap:7px}.boundary{padding:8px;border-radius:9px;background:#0b1929}.boundary b{display:block;font-size:13px}.roof b{color:var(--gold)}.floor b{color:var(--cyan)}.marker{height:6px;border-radius:999px;background:#16283d;margin-top:8px;position:relative}.marker i{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;background:#fff;transform:translateX(-50%);box-shadow:0 0 0 3px rgba(255,255,255,.12)}
+.map{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.pricebox{padding:14px;border-radius:13px;background:#07111e;border:1px solid var(--line)}.pricebox .label{font-size:10px;color:var(--muted);text-transform:uppercase}.pricebox .value{font-size:20px;font-weight:800;margin-top:3px}.pricebox.high .value{color:var(--gold)}.pricebox.low .value{color:var(--cyan)}.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.chart{height:290px;border:1px solid var(--line);border-radius:14px;background:#050c15;position:relative;overflow:hidden}.chart .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(42,65,88,.38) 1px,transparent 1px),linear-gradient(90deg,rgba(42,65,88,.25) 1px,transparent 1px);background-size:10% 20%}.axis{position:absolute;right:7px;color:#60758a;font-size:9px}.a100{top:5px}.a90{top:10%}.a80{top:20%}.a70{top:30%}.a60{top:40%}.a50{top:50%}.a40{top:60%}.a30{top:70%}.a20{top:80%}.a10{top:90%}.a0{bottom:5px}.rline{position:absolute;left:0;right:0;height:2px}.r30{background:var(--pink)}.r800{background:#fff;border-top:1px dashed #fff;height:0}.chart-title{position:absolute;left:10px;top:8px;font-size:10px;color:#b8c7d7;z-index:2}.zone-lines{position:absolute;inset:0}.zband{position:absolute;left:0;right:0;border-top:1px solid rgba(245,184,75,.55);border-bottom:1px solid rgba(39,211,230,.45);background:rgba(40,100,130,.04)}.trace{position:absolute;left:2%;right:5%;height:3px;background:linear-gradient(90deg,transparent,#fff,#fff,transparent);border-radius:99px;transform-origin:left center}.osma-zero{position:absolute;left:0;right:0;top:50%;border-top:1px dashed #526b82}.bars{position:absolute;left:4%;right:4%;top:8%;bottom:8%;display:flex;align-items:center;gap:2px}.bar{flex:1;max-width:10px;border-radius:2px 2px 0 0;background:var(--green);align-self:flex-end}.bar.neg{background:var(--red);align-self:flex-start;border-radius:0 0 2px 2px}.chart-meta{display:flex;gap:15px;flex-wrap:wrap;color:#aebed0;margin-top:8px;font-size:11px}.chart-meta b{color:var(--text)}
+.smallgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:#07111e;border:1px solid var(--line);border-radius:12px;padding:11px}.stat label{display:block;font-size:9px;color:var(--muted);text-transform:uppercase}.stat b{display:block;margin-top:4px;font-size:15px}
+.entry{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,7,13,.98)}.entry-card{width:min(430px,100%);background:linear-gradient(180deg,#0c1b2d,#07111e);border:1px solid #29435f;border-radius:22px;padding:28px;box-shadow:0 30px 100px rgba(0,0,0,.55)}.entry-brand{text-align:center;font-size:30px;font-weight:950;letter-spacing:1.5px}.entry-sub{text-align:center;color:var(--muted);margin:7px 0 26px}.field{margin-bottom:14px}.field label{display:block;font-size:10px;color:#9eb0c4;font-weight:800;letter-spacing:.9px;margin-bottom:6px}.field input{width:100%;padding:14px;border-radius:11px;border:1px solid #2b4662;background:#040b14;color:#fff;font-size:15px;outline:none}.field input:focus{border-color:#6c91b8}.enter{width:100%;border:0;border-radius:11px;padding:14px;background:#edf5ff;color:#07111e;font-weight:900;cursor:pointer}.entry-error{min-height:20px;text-align:center;color:var(--red);font-size:12px;margin-top:10px}
+@media(max-width:720px){.map{grid-template-columns:1fr}.smallgrid{grid-template-columns:repeat(2,1fr)}.opps{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.wrap{padding:10px}.zone-grid{grid-template-columns:1fr}.smallgrid{grid-template-columns:1fr 1fr}.brand h1{font-size:19px}.signal{font-size:21px}}
+</style>
+</head>
+<body>
+<div id="entry" class="entry">
+  <div class="entry-card">
+    <div class="entry-brand">TMFX_SIGNAL</div>
+    <div class="entry-sub">Your market pair and timeframe are the only surface inputs.</div>
+    <div class="field"><label>USER ID</label><input id="entryPair" autocomplete="off" placeholder="EURUSD"></div>
+    <div class="field"><label>PASSWORD</label><input id="entryTf" autocomplete="off" placeholder="15min"></div>
+    <button class="enter" id="enterBtn">ENTER TMFX_SIGNAL</button>
+    <div id="entryError" class="entry-error"></div>
+  </div>
+</div>
+
+<main id="app" class="wrap hidden">
+  <div class="brand">
+    <div><h1>TMFX_SIGNAL</h1><small>12-Zone Roof/Floor • O12/O36 • configured price map</small></div>
+    <div class="badge"><i id="sourceDot" class="dot"></i><span id="sourceText">CONFIGURED / OFFLINE</span></div>
+  </div>
+
+  <section class="card signal-card">
+    <div class="selected"><span id="surfacePair">EURUSD</span> • <span id="surfaceTf">15MIN</span></div>
+    <div id="finalSignal" class="signal wait">READING TMFX MAP…</div>
+    <p id="signalNote" class="signal-note">The engine is synchronizing the selected pair, timeframe, 12-zone Roof/Floor map, RSI 30/800 confirmation and O12/O36 propulsion.</p>
+    <div class="opps">
+      <div id="opp1" class="opp"><strong>1 • ROOF</strong>highest-height opportunity</div>
+      <div id="opp2" class="opp"><strong>2 • CONFIRM</strong>trend confirmation</div>
+      <div id="opp3" class="opp"><strong>3 • PROPULSION</strong>O12 → O36</div>
+      <div id="opp4" class="opp"><strong>4 • FLOOR</strong>lowest-price opportunity</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="statusbar"><div><div class="muted">12-ZONE RSI MAP</div><div class="selected">Roof / Floor structure</div></div><div id="zoneReadout" class="badge">WAITING FOR R1</div></div>
+    <div id="zones" class="zone-grid" style="margin-top:12px"></div>
+  </section>
+
+  <section class="card">
+    <div class="muted">TWO CHART MAPS</div>
+    <div class="map" style="margin-top:10px">
+      <div>
+        <div class="chart" id="rsiChart">
+          <div class="grid"></div><div class="chart-title">R1 = RSI 30 • R2 = RSI 800</div>
+          <div class="axis a100">100</div><div class="axis a90">90</div><div class="axis a80">80</div><div class="axis a70">70</div><div class="axis a60">60</div><div class="axis a50">50</div><div class="axis a40">40</div><div class="axis a30">30</div><div class="axis a20">20</div><div class="axis a10">10</div><div class="axis a0">0</div>
+          <div id="zoneLines" class="zone-lines"></div><div id="r800Line" class="rline r800"></div><div id="r30Line" class="rline r30"></div><div id="rsiTrace" class="trace"></div>
+        </div>
+        <div class="chart-meta"><span>R1: <b id="r1Text">—</b></span><span>R2: <b id="r2Text">—</b></span><span>R1 STATE: <b id="rStateText">—</b></span></div>
+      </div>
+      <div>
+        <div class="chart" id="osmaChart"><div class="grid"></div><div class="chart-title">O12 = propeller • O36 = magnified propulsion</div><div class="osma-zero"></div><div id="bars" class="bars"></div></div>
+        <div class="chart-meta"><span>O12: <b id="o12Text">—</b></span><span>O36: <b id="o36Text">—</b></span><span>PROP: <b id="propText">—</b></span><span>EDGE: <b id="edgeText">—</b></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="muted">CONFIGURED PRICE MAP</div>
+    <div class="smallgrid" style="margin-top:10px">
+      <div class="pricebox high"><div class="label">Configured High</div><div id="high" class="value">—</div></div>
+      <div class="pricebox low"><div class="label">Configured Low</div><div id="low" class="value">—</div></div>
+      <div class="stat"><label>Price map</label><b id="priceMap">Configured R/S</b></div>
+      <div class="stat"><label>Map status</label><b id="mapStatus">Waiting</b></div>
+    </div>
+    <p class="muted" style="line-height:1.5;margin-bottom:0">These are existing TMFX price-map levels. The signal surface does not recalculate the Fibonacci construction.</p>
+  </section>
+
+  <section class="card">
+    <div class="smallgrid">
+      <div class="stat"><label>Direction</label><b id="direction">—</b></div>
+      <div class="stat"><label>Momentum</label><b id="momentum">—</b></div>
+      <div class="stat"><label>Opportunity</label><b id="opportunity">—</b></div>
+      <div class="stat"><label>Risk / Target</label><b id="riskTarget">Use mapped levels</b></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const DATA={
+ XAUUSD:[5139.357538,3766],XAGUSD:[90.663076,51.556],BTCUSD:[95456.19046,53166.66431],ETHUSD:[3194.215076,1370.16],SOLUSD:[125.33102,67.295102],
+ EURUSD:[1.183243,1.127154],GBPUSD:[1.384907,1.308057],AUDUSD:[0.731359,0.680259],NZDUSD:[0.610197,0.557188],USDJPY:[166.648653,153.713979],USDCAD:[1.441841,1.344911],USDCHF:[0.833316,0.7682],
+ EURJPY:[189.164081,178.383265],GBPJPY:[222.684285,208.156428],EURGBP:[0.87475,0.841801],EURAUD:[1.675834,1.5987],GBPAUD:[1.955024,1.84362],EURCAD:[1.633766,1.585561],GBPCAD:[1.91776,1.818054],
+ AUDCAD:[1.004909,0.943751],AUDJPY:[116.386673,108.497897],NZDJPY:[96.457673,89.967183],CADJPY:[118.168734,109.886285],CHFJPY:[207.017244,190.95622],EURCHF:[0.951016,0.905549],GBPCHF:[1.11608,1.040191],
+ EURNZD:[2.043837,1.934459],GBPNZD:[2.380494,2.225971],AUDNZD:[1.2376,1.184971],NZDCAD:[0.837447,0.790015],EURSGD:[1.499977,1.463633],USDCNH:[6.81912,6.69754],NZDCHF:[0.488324,0.4522],USDZAR:[17.275785,15.663],USDSGD:[1.308188,1.259328]
+};
+const ALIAS={GOLD:'XAUUSD',SILVER:'XAGUSD'};
+const ZONES=[
+ {n:1,f:65,r:90,label:'FLOOR 65 | ROOF 90',floor:65,roof:90},
+ {n:2,f:60,r:85,label:'FLOOR 60 | ROOF 85',floor:60,roof:85},
+ {n:3,f:55,r:80,label:'FLOOR 55 | ROOF 80',floor:55,roof:80},
+ {n:4,f:50,r:75,label:'FLOOR 50 | ROOF 75',floor:50,roof:75},
+ {n:5,f:45,r:70,label:'FLOOR 45 | ROOF 70',floor:45,roof:70},
+ {n:6,f:40,r:65,label:'FLOOR 40 | ROOF 65',floor:40,roof:65},
+ {n:7,f:35,r:60,label:'FLOOR 35 | ROOF 60',floor:35,roof:60},
+ {n:8,f:30,r:55,label:'FLOOR 30 | ROOF 55',floor:30,roof:55},
+ {n:9,f:25,r:50,label:'FLOOR 25 | ROOF 50',floor:25,roof:50},
+ {n:10,f:20,r:45,label:'FLOOR 20 | ROOF 45',floor:20,roof:45},
+ {n:11,f:15,r:40,label:'FLOOR 15 | ROOF 40',floor:15,roof:40},
+ {n:12,f:10,r:35,label:'FLOOR 10 | ROOF 35',floor:10,roof:35}
+];
+// Twelve distinct Roof/Floor panels observed in the user's TradingView layout.
+// RSI 31 is not a second signal; it is only a display boundary used to form the zone.
+const PROP={ '1MIN':'5MIN','5MIN':'15MIN','15MIN':'1HR','30MIN':'4HR','1HR':'1DAY' };
+let state={pair:'EURUSD',tf:'15MIN',live:null};
+const $=id=>document.getElementById(id);
+function normPair(v){v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return ALIAS[v]||v}
+function normTf(v){v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return ({'1M':'1MIN','1MIN':'1MIN','5M':'5MIN','5MIN':'5MIN','15M':'15MIN','15MIN':'15MIN','30M':'30MIN','30MIN':'30MIN','1H':'1HR','1HR':'1HR','60M':'1HR','60MIN':'1HR'})[v]||v}
+function pct(v){return Math.max(0,Math.min(100,100-v))}
+function near(a,b,t=1.5){return Math.abs(a-b)<=t}
+function stateFromSeries(values){
+  if(!Array.isArray(values)||values.length<3) return {value:null,state:'UNAVAILABLE',slope:0};
+  const nums=values.map(Number).filter(Number.isFinite); if(nums.length<3) return {value:null,state:'UNAVAILABLE',slope:0};
+  const a=nums[nums.length-3],b=nums[nums.length-2],c=nums[nums.length-1],slope=c-b;
+  const peak=c>=b && b>=a ? 'RISING' : c<b && b>=a ? 'PEAKED' : c<b && b<a ? 'FALLING' : 'TURNING';
+  const trough=c<=b && b<=a ? 'FALLING' : c>b && b<=a ? 'TROUGHED' : c>b && b>a ? 'RISING' : 'TURNING';
+  return {value:c,state:slope<0?'PEAKED':slope>0?'TROUGHED':'FLAT',slope};
+}
+function buildZones(r1){
+  const host=$('zones'); host.innerHTML='';
+  ZONES.forEach(z=>{
+    const pos=(r1==null)?50:Math.max(0,Math.min(100,((r1-z.floor)/(z.roof-z.floor))*100));
+    const active=r1!=null && r1>=z.floor && r1<=z.roof;
+    const el=document.createElement('div');el.className='zone'+(active?' active':'');
+    el.innerHTML=`<div class="zone-head"><span class="zone-name">ZONE ${z.n}</span><span class="zone-range">${z.label}</span></div><div class="rf"><div class="boundary floor"><span class="muted">FLOOR</span><b>${z.floor}</b></div><div class="boundary roof"><span class="muted">ROOF</span><b>${z.roof}</b></div></div><div class="marker"><i style="left:${pos}%"></i></div>`;
+    host.appendChild(el);
+  });
+}
+function drawRsi(r1,r2){
+  $('r30Line').style.top=pct(r1==null?50:r1)+'%'; $('r800Line').style.top=pct(r2==null?50:r2)+'%';
+  const y=pct(r1==null?50:r1); $('rsiTrace').style.top=`calc(${y}% - 1px)`;
+  const bands=$('zoneLines');bands.innerHTML='';
+  ZONES.forEach(z=>{const b=document.createElement('div');b.className='zband';b.style.top=pct(z.roof)+'%';b.style.height=(z.roof-z.floor)+'%';bands.appendChild(b)});
+}
+function drawOsma(o12,o36){
+  const bars=$('bars');bars.innerHTML='';
+  const vals=(o36||[]).slice(-36).map(Number).filter(Number.isFinite);
+  const source=vals.length?vals:Array.from({length:32},(_,i)=>Math.sin(i*.7));
+  const max=Math.max(...source.map(v=>Math.abs(v)),1);
+  source.forEach(v=>{const d=document.createElement('div');d.className='bar'+(v<0?' neg':'');d.style.height=(Math.max(5,Math.abs(v)/max*42))+'%';bars.appendChild(d)});
+}
+function peakOrTroughAtZone(r1,zones){
+  if(r1==null) return 'WAIT';
+  const active=zones.filter(z=>r1>=z.floor&&r1<=z.roof);
+  if(active.length===0) return r1>55?'ABOVE ZONE MAP':'BELOW ZONE MAP';
+  const roof=active.some(z=>near(r1,z.roof,1.5));
+  const floor=active.some(z=>near(r1,z.floor,1.5));
+  return roof?'AT ROOF':floor?'AT FLOOR':'INSIDE ZONE';
+}
+function render(data){
+  const d=data||{}; const pair=state.pair,tf=state.tf;
+  $('surfacePair').textContent=pair;$('surfaceTf').textContent=tf;
+  $('high').textContent=(d.high??DATA[pair]?.[0]??'—');$('low').textContent=(d.low??DATA[pair]?.[1]??'—');
+  const r1=Number.isFinite(d.rsi30)?d.rsi30:null, r2=Number.isFinite(d.rsi800)?d.rsi800:null;
+  const rState=d.rsi30State||'UNAVAILABLE'; const o12=d.o12State||'UNAVAILABLE',o36=d.o36State||'UNAVAILABLE';
+  $('r1Text').textContent=r1==null?'—':r1.toFixed(2);$('r2Text').textContent=r2==null?'—':r2.toFixed(2);$('rStateText').textContent=rState;
+  $('o12Text').textContent=o12;$('o36Text').textContent=o36;$('propText').textContent=(d.propellerTimeframe||PROP[tf]||'—');
+  const doubleEdge=!!d.doubleEdge; const propTf=d.propellerTimeframe||PROP[tf]||'—'; const propState=d.propellerState||'UNAVAILABLE'; $('edgeText').textContent=doubleEdge?'DOUBLE EDGE':'SINGLE PROPULSION';
+  drawRsi(r1,r2);drawOsma(d.o12Values,d.o36Values);buildZones(r1);
+  const zoneState=peakOrTroughAtZone(r1,ZONES);$('zoneReadout').textContent=zoneState;
+  const sell=rState==='PEAKED' && r1!=null && r2!=null && r1<r2;
+  const buy=rState==='TROUGHED' && r1!=null && r2!=null && r1>r2;
+  const propKnown=propState!=='UNAVAILABLE';
+  const propExhausted=['PEAKED','TROUGHED','EXHAUSTED'].includes(propState);
+  const propFresh=['STARTING','FRESH','ACTIVE'].includes(propState);
+  const doubleProp=doubleEdge;
+  const roof=zoneState==='AT ROOF', floor=zoneState==='AT FLOOR';
+  let title='WAIT — MAP NOT YET CONFIRMED',cls='wait',note='Waiting for a valid RSI 30/800 relationship and Roof/Floor context.';
+  if(sell){title='SELLING TREND CONFIRMED';cls='sell';note=`RSI 30 has PEAKED while below RSI 800. Propeller: ${propTf} O12 (${propState}). Use the configured price map for the practical target/SL area.`}
+  else if(buy){title='BUYING TREND CONFIRMED';cls='buy';note=`RSI 30 has TROUGHED while above RSI 800. Propeller: ${propTf} O12 (${propState}). Use the configured price map for the practical target/SL area.`}
+  else if(roof){title='ROOF OPPORTUNITY';note=`RSI 30 is at a roof. First read the originating propeller (${propTf} O12). A fresh/strong propeller can break multiple lower-timeframe lines; roof means exhaustion is being watched, not an automatic entry.`}
+  else if(floor){title='FLOOR OPPORTUNITY';note=`RSI 30 is at a floor. First read the originating propeller (${propTf} O12). A fresh/strong propeller can continue through lower-timeframe levels; floor means exhaustion is being watched, not an automatic entry.`}
+  $('finalSignal').textContent=title;$('finalSignal').className='signal '+cls;$('signalNote').textContent=note;
+  $('direction').textContent=sell?'SELL':buy?'BUY':'WAIT';$('momentum').textContent=doubleEdge?'DOUBLE EDGE':(o12+' / '+o36);$('opportunity').textContent=sell?'CONFIRMED SELL':buy?'CONFIRMED BUY':roof?'ROOF':floor?'FLOOR':'WAIT';$('riskTarget').textContent=(propFresh?'Propeller active: do not assume lower-TF line will stop price. ':propExhausted?'Propeller exhausted: mapped R/S becomes more meaningful. ':'Propeller state: '+propState+'. ')+'Use configured Fibonacci/Magic levels.';
+  ['opp1','opp2','opp3','opp4'].forEach(x=>$(x).classList.remove('active')); if(roof)$('opp1').classList.add('active'); if(sell||buy)$('opp2').classList.add('active'); if(doubleEdge||o12==='ACTIVE'||o36==='ACTIVE')$('opp3').classList.add('active'); if(floor)$('opp4').classList.add('active');
+  $('mapStatus').textContent=d.live?'LIVE PRICE / INDICATORS':'CONFIGURED FALLBACK';
+  $('sourceText').textContent=d.live?'LIVE • TWELVE DATA':'CONFIGURED / OFFLINE';$('sourceDot').className='dot'+(d.live?' live':'');
+}
+async function load(){
+  const fallback={high:DATA[state.pair]?.[0],low:DATA[state.pair]?.[1],live:false};
+  try{
+    const r=await fetch('/api/market?pair='+encodeURIComponent(state.pair)+'&timeframe='+encodeURIComponent(state.tf),{cache:'no-store'});
+    if(!r.ok) throw new Error('API '+r.status);
+    const d=await r.json(); if(d.status==='ok') return {...fallback,...d,live:true};
+  }catch(e){}
+  return fallback;
+}
+async function enter(){
+  const pair=normPair($('entryPair').value),tf=normTf($('entryTf').value); const err=$('entryError');
+  if(!DATA[pair]){err.textContent='Enter a supported currency pair or GOLD/SILVER.';return}
+  if(!PROP[tf]){err.textContent='Use 1min, 5min, 15min, 30min or 1hr.';return}
+  state={pair,tf};window.TMFX_STATE={L2:pair,currency:pair,timeframe:tf};
+  $('entry').classList.add('hidden');$('app').classList.remove('hidden');
+  render({high:DATA[pair][0],low:DATA[pair][1]});
+  const d=await load();render(d);
+}
+$('enterBtn').addEventListener('click',enter);$('entryTf').addEventListener('keydown',e=>{if(e.key==='Enter')enter()});$('entryPair').addEventListener('keydown',e=>{if(e.key==='Enter')$('entryTf').focus()});
+</script>
+</body>
+</html>
