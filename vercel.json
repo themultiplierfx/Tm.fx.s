@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "functions": {
+    "api/market.js": { "runtime": "nodejs20.x" }
+  },
+  "routes": [
+    { "src": "/api/market", "dest": "/api/market.js" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
